@@ -10,8 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dfa3e4e9-edd2-479b-9462-34292bbf3db7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/SSLCertificateTracker/Services/CertificateExpirationService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SSLCertificateTracker/Controllers/CertificatesController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SSLCertificateTracker/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SSLCertificateTracker/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SSLCertificateTracker/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SSLCertificateTracker/Program.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +23,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/SSLCertificateTracker/Controllers/CertificatesController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SSLCertificateTracker/Models/ApplicationUser.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SSLCertificateTracker/Models/SslCertificate.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SSLCertificateTracker/Models/UserSettings.cs" root0="FORCE_HIGHLIGHTING" />
@@ -115,7 +117,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1770218649990</updated>
-      <workItem from="1770218655039" duration="6157000" />
+      <workItem from="1770218655039" duration="7365000" />
     </task>
     <task id="LOCAL-00001" summary="Scaffold project and add project dependencies.&#10;&#10;-Add entity framework core for database connection&#10;-Add mailkit for sending emails&#10;-Add hangfire for running background tasks">
       <option name="closed" value="true" />
@@ -141,7 +143,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770224428895</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Add certificate expiration service for sending emails">
+      <option name="closed" value="true" />
+      <created>1770225188161</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1770225188161</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -154,7 +164,8 @@
     <MESSAGE value="Scaffold project and add project dependencies.&#10;&#10;-Add entity framework core for database connection&#10;-Add mailkit for sending emails&#10;-Add hangfire for running background tasks" />
     <MESSAGE value="Add data models and configure database instance connection" />
     <MESSAGE value="Add email service" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add email service" />
+    <MESSAGE value="Add certificate expiration service for sending emails" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add certificate expiration service for sending emails" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
