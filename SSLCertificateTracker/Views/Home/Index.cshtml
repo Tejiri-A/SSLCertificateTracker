@@ -1,8 +1,63 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<SslCertificate>
+
+@{
+    ViewData["Title"] = "SSL Certificates";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="mt-4 container">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2>SSL Certificates</h2>
+        <a asp-action="Create" class="btn btn-primary">Add New Certificate</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Domain Name</th>
+                    <th>Date Issued</th>
+                    <th>Date Re-issued</th>
+                    <th>Expiration Date</th>
+                    <th>Days Until Expiry</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+                <tbody>
+                @foreach (var item in System.Linq.Enumerable.Empty<SslCertificate>().Concat(Model ?? System.Linq.Enumerable.Empty<SslCertificate>()))
+                {
+                    if (item == null) continue;
+
+                    var expiration = item.ExpirationDate; // non-nullable DateTime on the model
+                    var daysUntilExpiry = (int)(expiration - DateTime.Now).TotalDays;
+
+                    string? rowClass = daysUntilExpiry <= 7 ? "table-danger" : daysUntilExpiry <= 30 ? "table-warning" : "";
+
+                    <tr class="@rowClass">
+                        <td>@item.DomainName</td>
+                        <td>@item.DateIssued.ToShortDateString()</td>
+                        <td>@(item.DateReissued?.ToShortDateString() ?? "N/A")</td>
+                        <td>@expiration.ToShortDateString()</td>
+                        <td>
+                            <span class="badge @(daysUntilExpiry <= 30 ? "bg-warning" : "bg-success")">
+                                @daysUntilExpiry
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-action="Edit" asp-route-id="@item.Id" 
+                                   class="btn-outline-primary btn btn-sm">Edit</a>
+                                <form asp-action="Delete" method="post" 
+                                      onsubmit="return confirm('Delete this certificate?');">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn-outline-danger btn btn-sm">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+        </table>
+    </div>
 </div>

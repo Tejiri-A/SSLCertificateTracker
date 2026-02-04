@@ -1,0 +1,61 @@
+@model SslCertificate
+
+@{
+    ViewData["Title"] = "Add Certificate";
+}
+
+<div class="justify-content-center row">
+    <div class="col-md-8">
+        <div class="shadow card">
+            <div class="bg-primary text-white card-header">
+                <h4 class="mb-0"><i class="bi bi-plus-circle"></i> Add New SSL Certificate</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="DomainName" class="form-label"></label>
+                        <input asp-for="DomainName" class="form-control" />
+                        <span asp-validation-for="DomainName" class="text-danger"></span>
+                        <small class="text-muted">e.g., example.com, www.example.com</small>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label asp-for="DateIssued" class="form-label"></label>
+                            <input asp-for="DateIssued" type="date" class="form-control" />
+                            <span asp-validation-for="DateIssued" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3 col-md-6">
+                            <label asp-for="ExpirationDate" class="form-label"></label>
+                            <input asp-for="ExpirationDate" type="date" class="form-control" />
+                            <span asp-validation-for="ExpirationDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="DateReissued" class="form-label"></label>
+                        <input asp-for="DateReissued" type="date" class="form-control" />
+                        <span asp-validation-for="DateReissued" class="text-danger"></span>
+                        <small class="text-muted">Leave blank if not re-issued</small>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn-outline-secondary btn">
+                            <i class="bi-arrow-left bi"></i> Back to List
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Save Certificate
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

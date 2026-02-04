@@ -1,15 +1,17 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SSLCertificateTracker.Models;
 
 namespace SSLCertificateTracker.data;
 
-public class ApplicationDbContext:DbContext
+public class ApplicationDbContext:IdentityDbContext<ApplicationUser>
 {
        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options){}
        
        public DbSet<SslCertificate> SslCertificates { get; set; }
        public DbSet<UserSettings> UserSettings { get; set; }
+       public new DbSet<IdentityRole> Roles {get; set; }
 
        protected override void OnModelCreating(ModelBuilder builder)
        {

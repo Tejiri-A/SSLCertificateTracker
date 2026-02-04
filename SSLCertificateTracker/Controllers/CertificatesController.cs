@@ -20,6 +20,10 @@ public class CertificatesController : Controller
     public async Task<IActionResult> Index()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+        {
+            return Unauthorized();
+        }
         var certificates = await _context.SslCertificates
             .Where(c => c.UserId == userId)
             .OrderByDescending(c => c.ExpirationDate).ToListAsync();
@@ -28,13 +32,21 @@ public class CertificatesController : Controller
     }
     
     // GET Certificates/Create
+    public IActionResult Create()
+    {
+        return View();
+    }
+    
+    // POST Certificates/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(SslCertificate certificate)
     {
         if (ModelState.IsValid)
         {
-            certificate.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null) return Unauthorized();
+            certificate.UserId = userId;
             certificate.CreatedAt = DateTime.UtcNow;
             certificate.UpdatedAt = DateTime.UtcNow;
 
@@ -55,6 +67,7 @@ public class CertificatesController : Controller
         }
 
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
         var certificate = await _context.SslCertificates.FirstOrDefaultAsync(c => c.Id == id && c.UserId == userId);
 
         if (certificate == null)
@@ -74,6 +87,7 @@ public class CertificatesController : Controller
         if (id != certificate.Id) return NotFound();
         
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
         var existingCert = await _context.SslCertificates
             .FirstOrDefaultAsync(c => c.Id == id && c.UserId == userId);
             
@@ -109,6 +123,7 @@ public class CertificatesController : Controller
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null) return Unauthorized();
         var certificate = await _context.SslCertificates
             .FirstOrDefaultAsync(c => c.Id == id && c.UserId == userId);
             

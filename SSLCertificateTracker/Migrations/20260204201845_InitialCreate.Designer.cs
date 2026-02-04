@@ -12,7 +12,7 @@ using SSLCertificateTracker.data;
 namespace SSLCertificateTracker.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260204163407_InitialCreate")]
+    [Migration("20260204201845_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

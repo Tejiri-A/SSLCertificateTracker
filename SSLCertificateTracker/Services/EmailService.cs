@@ -26,9 +26,16 @@ public class EmailService : IEmailService
         emailMessage.Body = new TextPart("html") { Text = message };
 
         using var client = new SmtpClient();
+        var portString = _configuration["EmailSettings:SmtpPort"];
+        var port = 587;
+        if (!string.IsNullOrWhiteSpace(portString) && int.TryParse(portString, out var parsedPort))
+        {
+            port = parsedPort;
+        }
+
         await client.ConnectAsync(
             _configuration["EmailSettings:SmtpServer"],
-            int.Parse(_configuration["EmailSettings:SmtpPort"]),
+            port,
             MailKit.Security.SecureSocketOptions.StartTls);
 
         await client.AuthenticateAsync(

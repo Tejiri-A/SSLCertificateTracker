@@ -26,6 +26,6 @@ public class SslCertificate
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     
     // Foreign key for user
-    public string UserId { get; set; } = null!;
-    public virtual ApplicationUser User { get; set; } = null!;
+    public string? UserId { get; set; }
+    public virtual ApplicationUser? User { get; set; }
 }
