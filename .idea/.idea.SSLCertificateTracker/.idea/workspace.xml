@@ -10,13 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dfa3e4e9-edd2-479b-9462-34292bbf3db7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/SSLCertificateTracker/Models/ApplicationUser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SSLCertificateTracker/Models/SslCertificate.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SSLCertificateTracker/Models/UserSettings.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SSLCertificateTracker/data/ApplicationDbContext.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SSLCertificateTracker/Services/EmailService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SSLCertificateTracker/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SSLCertificateTracker/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SSLCertificateTracker/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SSLCertificateTracker/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SSLCertificateTracker/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/SSLCertificateTracker/appsettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +25,7 @@
     <setting file="file://$PROJECT_DIR$/SSLCertificateTracker/Models/ApplicationUser.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SSLCertificateTracker/Models/SslCertificate.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SSLCertificateTracker/Models/UserSettings.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SSLCertificateTracker/Services/EmailService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/SSLCertificateTracker/data/ApplicationDbContext.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="McpProjectServerCommands">
@@ -118,7 +114,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1770218649990</updated>
-      <workItem from="1770218655039" duration="4956000" />
+      <workItem from="1770218655039" duration="5556000" />
     </task>
     <task id="LOCAL-00001" summary="Scaffold project and add project dependencies.&#10;&#10;-Add entity framework core for database connection&#10;-Add mailkit for sending emails&#10;-Add hangfire for running background tasks">
       <option name="closed" value="true" />
@@ -128,7 +124,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770219881497</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Add data models and configure database instance connection">
+      <option name="closed" value="true" />
+      <created>1770223725396</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1770223725396</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -139,7 +143,8 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Scaffold project and add project dependencies.&#10;&#10;-Add entity framework core for database connection&#10;-Add mailkit for sending emails&#10;-Add hangfire for running background tasks" />
-    <option name="LAST_COMMIT_MESSAGE" value="Scaffold project and add project dependencies.&#10;&#10;-Add entity framework core for database connection&#10;-Add mailkit for sending emails&#10;-Add hangfire for running background tasks" />
+    <MESSAGE value="Add data models and configure database instance connection" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add data models and configure database instance connection" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
