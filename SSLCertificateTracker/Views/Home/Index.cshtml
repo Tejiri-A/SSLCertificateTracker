@@ -7,7 +7,7 @@
 <div class="mt-4 container">
     <div class="d-flex align-items-center justify-content-between mb-4">
         <h2>SSL Certificates</h2>
-        <a asp-action="Create" class="btn btn-primary">Add New Certificate</a>
+        <a asp-controller="Certificates" asp-action="Create" class="btn btn-primary">Add New Certificate</a>
     </div>
 
     <div class="table-responsive">
@@ -23,14 +23,12 @@
                 </tr>
             </thead>
                 <tbody>
-                @foreach (var item in System.Linq.Enumerable.Empty<SslCertificate>().Concat(Model ?? System.Linq.Enumerable.Empty<SslCertificate>()))
+                @foreach (var item in Model ?? Enumerable.Empty<SslCertificate>())
                 {
-                    if (item == null) continue;
+                    var expiration = item.ExpirationDate;
+                    var daysUntilExpiry = (int)(expiration - DateTime.UtcNow).TotalDays;
 
-                    var expiration = item.ExpirationDate; // non-nullable DateTime on the model
-                    var daysUntilExpiry = (int)(expiration - DateTime.Now).TotalDays;
-
-                    string? rowClass = daysUntilExpiry <= 7 ? "table-danger" : daysUntilExpiry <= 30 ? "table-warning" : "";
+                    string rowClass = daysUntilExpiry <= 7 ? "table-danger" : daysUntilExpiry <= 30 ? "table-warning" : "";
 
                     <tr class="@rowClass">
                         <td>@item.DomainName</td>
@@ -38,21 +36,25 @@
                         <td>@(item.DateReissued?.ToShortDateString() ?? "N/A")</td>
                         <td>@expiration.ToShortDateString()</td>
                         <td>
-                            <span class="badge @(daysUntilExpiry <= 30 ? "bg-warning" : "bg-success")">
+                            <span class="badge @(daysUntilExpiry <= 7 ? "bg-danger" : daysUntilExpiry <= 30 ? "bg-warning" : "bg-success")">
                                 @daysUntilExpiry
                             </span>
                         </td>
                         <td>
-                            <div class="btn-group" role="group">
-                                <a asp-action="Edit" asp-route-id="@item.Id" 
-                                   class="btn-outline-primary btn btn-sm">Edit</a>
-                                <form asp-action="Delete" method="post" 
-                                      onsubmit="return confirm('Delete this certificate?');">
-                                    <input type="hidden" name="id" value="@item.Id" />
-                                    <button type="submit" class="btn-outline-danger btn btn-sm">
-                                        Delete
-                                    </button>
-                                </form>
+                            <div class="row row-cols-1 row-cols-md-2 g-2" role="group">
+                                <div class="col">
+                                    <a asp-controller="Certificates" asp-action="Edit" asp-route-id="@item.Id" 
+                                       class="btn btn-outline-primary btn-sm w-100">Edit</a>
+                                </div>
+                                <div class="col">
+                                    <form asp-controller="Certificates" asp-action="Delete" method="post" 
+                                          onsubmit="return confirm('Delete this certificate?');">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button type="submit" class="btn btn-outline-danger btn-sm w-100">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </td>
                     </tr>

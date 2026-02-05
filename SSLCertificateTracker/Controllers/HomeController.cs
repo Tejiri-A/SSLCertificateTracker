@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SSLCertificateTracker.data;
 using SSLCertificateTracker.Models;
 
 namespace SSLCertificateTracker.Controllers;
@@ -7,15 +9,30 @@ namespace SSLCertificateTracker.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly ApplicationDbContext _context;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
     {
         _logger = logger;
+        _context = context;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            var userId = System.Security.Claims.ClaimTypes.NameIdentifier;
+            var currentUserId = User.FindFirst(userId)?.Value;
+            
+            var certificates = await _context.SslCertificates
+                .Where(c => c.UserId == currentUserId)
+                .OrderByDescending(c => c.ExpirationDate)
+                .ToListAsync();
+                
+            return View(certificates);
+        }
+        
+        return View(new List<SslCertificate>());
     }
 
     public IActionResult Privacy()

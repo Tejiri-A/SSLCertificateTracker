@@ -30,9 +30,9 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="me-auto navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Certificates" ? "active" : "")" 
+                        <a class="nav-link text-primary bg-light @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Certificates" ? "active" : "")" 
                            asp-controller="Certificates" asp-action="Index">
-                            <i class="me-1 bi-list-ul bi"></i>Certificates
+                            <i class="me-1 bi-list-ul bi"></i>Go To Certificates Page 
                         </a>
                     </li>
                     @if (User.IsInRole("Admin"))

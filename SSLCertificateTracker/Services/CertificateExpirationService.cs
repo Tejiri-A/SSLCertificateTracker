@@ -58,11 +58,11 @@ public class CertificateExpirationService : ICertificateExpirationService
 
                     await _emailService.SendEmailAsync(cert.User.Settings.NotificationEmail, subject, message);
                     
-                    _logger.LogInformation($"Sent expiry notification for {cert.DomainName} to {cert.DateIssued}");
+                    _logger.LogInformation($"Sent expiry notification for {cert.DomainName} to {cert.User.Settings.NotificationEmail}");
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"Failed to send notification for {cert.DomainName} to {cert.DateIssued}");
+                    _logger.LogError(e, $"Failed to send notification for {cert.DomainName} to {cert.User.Settings.NotificationEmail}");
                 }
             }
 

@@ -10,15 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dfa3e4e9-edd2-479b-9462-34292bbf3db7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/SSLCertificateTracker/Controllers/AccountController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SSLCertificateTracker/Models/LoginViewModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SSLCertificateTracker/Models/ProfileViewModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SSLCertificateTracker/Models/RegisterViewModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SSLCertificateTracker/data/SeedData.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SSLCertificateTracker/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SSLCertificateTracker/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SSLCertificateTracker/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SSLCertificateTracker/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SSLCertificateTracker/Views/Home/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/SSLCertificateTracker/Views/Home/Index.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SSLCertificateTracker/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/SSLCertificateTracker/appsettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,6 +122,7 @@
       <option name="presentableId" value="Default" />
       <updated>1770218649990</updated>
       <workItem from="1770218655039" duration="8914000" />
+      <workItem from="1770278310687" duration="1734000" />
     </task>
     <task id="LOCAL-00001" summary="Scaffold project and add project dependencies.&#10;&#10;-Add entity framework core for database connection&#10;-Add mailkit for sending emails&#10;-Add hangfire for running background tasks">
       <option name="closed" value="true" />
