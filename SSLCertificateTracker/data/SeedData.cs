@@ -1,60 +1,35 @@
-using Microsoft.AspNetCore.Identity;
 using SSLCertificateTracker.data;
 using SSLCertificateTracker.Models;
+using Microsoft.EntityFrameworkCore;
 
 public static class SeedData
 {
-    public static async Task Initialize(
-        ApplicationDbContext context,
-        UserManager<ApplicationUser> userManager,
-        RoleManager<IdentityRole> roleManager)
+    public static async Task Initialize(ApplicationDbContext context)
     {
         // Ensure database is created
         context.Database.EnsureCreated();
 
-        // Create roles
-        string[] roleNames = { "Admin", "User" };
-        
-        foreach (var roleName in roleNames)
+        // Check if any users exist
+        if (context.Users.Any())
         {
-            var roleExist = await roleManager.RoleExistsAsync(roleName);
-            if (!roleExist)
-            {
-                await roleManager.CreateAsync(new IdentityRole(roleName));
-            }
+            return; // DB has been seeded
         }
 
-        // Create admin user
-        var adminEmail = "admin@example.com";
-        var adminUser = await userManager.FindByEmailAsync(adminEmail);
+        /*
+        // Create admin user logic for Windows Auth if needed.
+        // For now, we rely on existing Windows Authentication users.
+        // You can manually add a user here that matches your Windows User Name.
         
-        if (adminUser == null)
+        var adminUser = new ApplicationUser
         {
-            adminUser = new ApplicationUser
-            {
-                UserName = adminEmail,
-                Email = adminEmail,
-                FullName = "Administrator",
-                EmailConfirmed = true
-            };
-            
-            var createAdmin = await userManager.CreateAsync(adminUser, "Admin@123");
-            if (createAdmin.Succeeded)
-            {
-                await userManager.AddToRoleAsync(adminUser, "Admin");
-                
-                // Create user settings
-                var userSettings = new UserSettings
-                {
-                    UserId = adminUser.Id,
-                    NotificationEmail = adminEmail,
-                    EnableEmailNotifications = true,
-                    DaysBeforeExpiryToNotify = 30
-                };
-                
-                context.UserSettings.Add(userSettings);
-                await context.SaveChangesAsync();
-            }
-        }
+            UserName = @"DOMAIN\Username", // Replace with your actual domain\username
+            FullName = "Administrator",
+            Email = "admin@example.com",
+            CreatedAt = DateTime.UtcNow
+        };
+        
+        context.Users.Add(adminUser);
+        await context.SaveChangesAsync();
+        */
     }
 }

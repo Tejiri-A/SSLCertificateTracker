@@ -28,56 +28,30 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="me-auto navbar-nav">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link text-primary bg-light @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Certificates" ? "active" : "")" 
                            asp-controller="Certificates" asp-action="Index">
-                            <i class="me-1 bi-list-ul bi"></i>Go To Certificates Page 
+                            <i class="bi bi-list-ul me-1"></i>Go To Certificates Page 
                         </a>
                     </li>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" href="/hangfire" target="_blank">
-                                <i class="me-1 bi bi-gear"></i>Background Jobs
-                            </a>
-                        </li>
-                    }
+                    <li class="nav-item">
+                        <a class="nav-link" href="/hangfire" target="_blank">
+                            <i class="bi bi-gear me-1"></i>Background Jobs
+                        </a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav">
                     @if (User.Identity?.IsAuthenticated == true)
                     {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="me-1 bi bi-person-circle"></i>@User.Identity.Name
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Account" asp-action="Profile">
-                                        <i class="me-2 bi bi-person"></i>Profile
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
-                                        <button type="submit" class="dropdown-item">
-                                            <i class="bi-box-arrow-right me-2 bi"></i>Logout
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
-                    }
-                    else
-                    {
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Account" asp-action="Login">
-                                <i class="bi-box-arrow-in-right me-1 bi"></i>Login
-                            </a>
+                            <span class="nav-link text-light">
+                                <i class="bi bi-person-circle me-1"></i>@User.Identity.Name
+                            </span>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Account" asp-action="Register">
-                                <i class="me-1 bi bi-person-plus"></i>Register
+                            <a class="nav-link" asp-controller="Account" asp-action="Profile">
+                                <i class="bi bi-person me-2"></i>Profile
                             </a>
                         </li>
                     }

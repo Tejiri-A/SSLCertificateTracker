@@ -14,31 +14,14 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add Identity
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-    {
-        options.Password.RequireDigit = true;
-        options.Password.RequiredLength = 6;
-        options.Password.RequireNonAlphanumeric = false;
-        options.Password.RequireUppercase = true;
-        options.Password.RequireLowercase = true;
-    
-        options.SignIn.RequireConfirmedAccount = false;
-        options.SignIn.RequireConfirmedEmail = false;
-    
-        options.User.RequireUniqueEmail = true;
-    })
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+// Add Windows Authentication
+builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.Negotiate.NegotiateDefaults.AuthenticationScheme)
+   .AddNegotiate();
 
-// Configure application cookie
-builder.Services.ConfigureApplicationCookie(options =>
+builder.Services.AddAuthorization(options =>
 {
-    options.LoginPath = "/Account/Login";
-    options.LogoutPath = "/Account/Logout";
-    options.AccessDeniedPath = "/Account/AccessDenied";
-    options.SlidingExpiration = true;
-    options.ExpireTimeSpan = TimeSpan.FromDays(30);
+    // specific policies if needed, otherwise default is used
+    options.FallbackPolicy = options.DefaultPolicy;
 });
 
 // Add Hangfire
@@ -49,8 +32,12 @@ builder.Services.AddHangfireServer();
 // Register custom services
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ICertificateExpirationService, CertificateExpirationService>();
+builder.Services.AddScoped<SSLCertificateTracker.Filters.ValidWindowsUserFilter>();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.AddService<SSLCertificateTracker.Filters.ValidWindowsUserFilter>();
+});
 
 var app = builder.Build();
 
@@ -69,10 +56,10 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
-        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        // var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        // var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         
-        await SeedData.Initialize(context, userManager, roleManager);
+        await SeedData.Initialize(context);
     }
     catch (Exception ex)
     {
@@ -102,6 +89,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
