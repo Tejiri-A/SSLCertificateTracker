@@ -8,7 +8,7 @@ The **SSL Certificate Tracker** is a management tool for IT administrators and d
 
 ### Key Features
 
-- **User Authentication**: Secure login and registration using ASP.NET Core Identity.
+- **User Authentication**: Secure access using Windows Authentication (Intranet).
 - **Certificate Management**: Add, view, edit, and delete SSL certificate details (Domain, Issue Date, Expiry Date).
 - **Automated Notifications**: Background jobs check for certificates expiring within a user-defined threshold (default 30 days).
 - **Email Alerts**: Integration with Gmail/SMTP for reliable distribution of alerts.
@@ -22,7 +22,7 @@ The **SSL Certificate Tracker** is a management tool for IT administrators and d
 - **Database**: Microsoft SQL Server / Azure SQL Database
 - **Background Processing**: Hangfire
 - **Email Service**: MailKit / MimeKit
-- **Authentication**: ASP.NET Core Identity
+- **Authentication**: Windows Authentication (Intranet / Active Directory)
 
 ---
 
@@ -51,9 +51,30 @@ The **SSL Certificate Tracker** is a management tool for IT administrators and d
    }
    ```
 3. Apply Migrations:
+
    ```bash
    dotnet ef database update
    ```
+
+   **Important**: This application uses **Windows Authentication**. Before running the app, you must manually register your Windows User in the database.
+   1. Find your exact Windows username by running this command in your terminal:
+      ```bash
+      whoami
+      ```
+      _Example output: `DESKTOP-ABC\User`_
+   2. Execute the following SQL command in your database (e.g., via SSMS or SQL cmd):
+      ```sql
+      INSERT INTO Users (Id, UserName, FullName, Email, CreatedAt)
+      VALUES (
+          NEWID(),
+          'YOUR_OUTPUT_FROM_WHOAMI', -- e.g., 'DESKTOP-ABC\User'
+          'Your Full Name',
+          'your-email@example.com',
+          GETUTCDATE()
+      );
+      ```
+      > **Note**: The `UserName` must match the output of `whoami` exactly (including the domain/machine name prefix). If you cannot access the app, check the `Access Denied` page which will display the username the server sees.
+
 4. Run the application:
    ```bash
    dotnet run
