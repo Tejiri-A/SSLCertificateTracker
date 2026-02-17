@@ -40,7 +40,7 @@ public class AccountController : Controller
         
         var model = new ProfileViewModel
         {
-            FullName = user.FullName,
+            Name = user.Name,
             Email = user.Email ?? string.Empty,
             NotificationEmail = userSettings?.NotificationEmail ?? user.Email,
             EnableEmailNotifications = userSettings?.EnableEmailNotifications ?? true,
@@ -72,7 +72,7 @@ public class AccountController : Controller
                 .FirstOrDefaultAsync(s => s.UserId == user.Id);
             
             // Update user
-            user.FullName = model.FullName;
+            user.Name = model.Name;
             _context.Users.Update(user);
             
             // Update or create user settings

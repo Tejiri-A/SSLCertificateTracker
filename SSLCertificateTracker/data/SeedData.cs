@@ -15,21 +15,30 @@ public static class SeedData
             return; // DB has been seeded
         }
 
-        /*
-        // Create admin user logic for Windows Auth if needed.
-        // For now, we rely on existing Windows Authentication users.
-        // You can manually add a user here that matches your Windows User Name.
-        
+        // Create initial admin user from insert_user.sql info
         var adminUser = new ApplicationUser
         {
-            UserName = @"DOMAIN\Username", // Replace with your actual domain\username
-            FullName = "Administrator",
-            Email = "admin@example.com",
+            IdgNumber = "user", // Based on whoami from insert_user.sql
+            Name = "Tejiri Amrasa",
+            UserName = @"desktop-uotjeai\user",
+            Email = "tjthecreator8@gmail.com",
+            IsActive = true,
+            IsAdmin = true,
             CreatedAt = DateTime.UtcNow
         };
+
+        var settings = new UserSettings
+        {
+            UserId = adminUser.Id,
+            NotificationEmail = adminUser.Email ?? "tjthecreator8@gmail.com",
+            EnableEmailNotifications = true,
+            DaysBeforeExpiryToNotify = 30
+        };
+
+        adminUser.Settings = settings;
         
         context.Users.Add(adminUser);
+        context.UserSettings.Add(settings);
         await context.SaveChangesAsync();
-        */
     }
 }

@@ -10,9 +10,13 @@ public class ApplicationUser
     public string Id { get; set; } = Guid.NewGuid().ToString();
 
     [Required]
+    [StringLength(50)]
+    public string IdgNumber { get; set; } = null!;
+
+    [Required]
     [StringLength(100)]
     [Display(Name = "Full Name")]
-    public string FullName { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
     [Required]
     [StringLength(256)]
@@ -21,6 +25,9 @@ public class ApplicationUser
     [EmailAddress]
     [StringLength(256)]
     public string? Email { get; set; }
+
+    public bool IsActive { get; set; } = true;
+    public bool IsAdmin { get; set; } = false;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

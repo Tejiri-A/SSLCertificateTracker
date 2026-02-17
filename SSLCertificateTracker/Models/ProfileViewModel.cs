@@ -5,7 +5,7 @@ public class ProfileViewModel
     [Required]
     [StringLength(100)]
     [Display(Name = "Full Name")]
-    public string FullName { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
     [Required]
     [EmailAddress]

@@ -6,8 +6,8 @@ public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
     {
         var httpContext = context.GetHttpContext();
         
-        // Allow any authenticated Windows user
-        return httpContext.User.Identity?.IsAuthenticated == true;
+        // Allow only Admin users
+        return httpContext.User.Identity?.IsAuthenticated == true && httpContext.User.IsInRole("Admin");
         
     }
 }

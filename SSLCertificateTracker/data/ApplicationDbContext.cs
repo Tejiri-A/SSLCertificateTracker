@@ -19,6 +19,9 @@ public class ApplicationDbContext : DbContext
        {
               base.OnModelCreating(builder);
 
+              builder.Entity<ApplicationUser>().HasIndex(u => u.IdgNumber).IsUnique();
+              builder.Entity<ApplicationUser>().HasIndex(u => u.UserName).IsUnique();
+
               builder.Entity<SslCertificate>().HasIndex(s => s.DomainName).IsUnique();
               
               builder.Entity<SslCertificate>().HasOne(s => s.User)

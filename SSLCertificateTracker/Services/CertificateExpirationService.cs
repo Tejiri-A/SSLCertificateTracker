@@ -36,14 +36,35 @@ public class CertificateExpirationService : ICertificateExpirationService
             .Include(c => c.User)
             .ThenInclude(u => u.Settings)
             .Where(c => c.ExpirationDate <= notificationDate &&
-                        c.ExpirationDate.Date > today &&
-                        c.User.Settings.EnableEmailNotifications).ToListAsync();
+                        c.ExpirationDate.Date > today)
+            .ToListAsync();
+
+        _logger.LogInformation($"Found {expiringCertificates.Count} total certificates expiring within 30 days.");
 
         foreach (var cert in expiringCertificates)
         {
+            if (cert.User == null)
+            {
+                _logger.LogWarning($"Certificate {cert.DomainName} has no associated user. Skipping notification.");
+                continue;
+            }
+
+            var settings = cert.User.Settings;
+            if (settings == null)
+            {
+                _logger.LogWarning($"User {cert.User.Name} has no notification settings. Skipping notification for {cert.DomainName}.");
+                continue;
+            }
+
+            if (!settings.EnableEmailNotifications)
+            {
+                _logger.LogInformation($"Notifications disabled for user {cert.User.Name}. Skipping {cert.DomainName}.");
+                continue;
+            }
+
             var daysUntilExpiry = (cert.ExpirationDate.Date - today).Days;
 
-            if (daysUntilExpiry <= cert.User.Settings.DaysBeforeExpiryToNotify)
+            if (daysUntilExpiry <= settings.DaysBeforeExpiryToNotify)
             {
                 try
                 {
