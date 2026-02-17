@@ -52,12 +52,24 @@ namespace SSLCertificateTracker.Filters
             // Extract IDG Number (often the username part of DOMAIN\Username)
             var idgNumber = fullUserName.Contains("\\") ? fullUserName.Split('\\')[1] : fullUserName;
 
-            // Check if user exists in DB by IdgNumber
-            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.IdgNumber == idgNumber);
+            // Check if user exists in DB by searching various fields for a match
+            // We check IdgNumber, UserName (full), and also case-insensitivity
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => 
+                u.IdgNumber == idgNumber || 
+                u.UserName == fullUserName || 
+                u.IdgNumber == fullUserName ||
+                u.UserName == idgNumber);
 
-            if (dbUser == null || !dbUser.IsActive)
+            if (dbUser == null)
             {
-                Console.WriteLine($"[ValidWindowsUserFilter] Access Denied for '{idgNumber}'. User not found or inactive.");
+                Console.WriteLine($"[ValidWindowsUserFilter] Access Denied: User not found in database. Checked IDG: '{idgNumber}' and FullName: '{fullUserName}'");
+                context.Result = new RedirectToActionResult("AccessDenied", "Account", null);
+                return;
+            }
+
+            if (!dbUser.IsActive)
+            {
+                Console.WriteLine($"[ValidWindowsUserFilter] Access Denied: User '{dbUser.IdgNumber}' found but is marked INACTIVE.");
                 context.Result = new RedirectToActionResult("AccessDenied", "Account", null);
                 return;
             }

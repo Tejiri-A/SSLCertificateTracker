@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SSLCertificateTracker.data;
 using SSLCertificateTracker.Models;
+using System.Security.Claims;
 
 public class AccountController : Controller
 {
@@ -23,13 +24,13 @@ public class AccountController : Controller
     [HttpGet]
     public async Task<IActionResult> Profile()
     {
-        var userName = User.Identity?.Name;
-        if (string.IsNullOrEmpty(userName))
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
         {
             return RedirectToAction("AccessDenied");
         }
 
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null)
         {
             return RedirectToAction("AccessDenied");
@@ -54,15 +55,15 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Profile(ProfileViewModel model)
     {
-        var userName = User.Identity?.Name;
-        if (string.IsNullOrEmpty(userName))
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
         {
              return RedirectToAction("AccessDenied");
         }
 
         if (ModelState.IsValid)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null)
             {
                return RedirectToAction("AccessDenied");

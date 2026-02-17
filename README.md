@@ -8,124 +8,83 @@ The **SSL Certificate Tracker** is a management tool for IT administrators and d
 
 ### Key Features
 
-- **User Authentication**: Secure access using Windows Authentication (Intranet).
-- **Certificate Management**: Add, view, edit, and delete SSL certificate details (Domain, Issue Date, Expiry Date).
-- **Automated Notifications**: Background jobs check for certificates expiring within a user-defined threshold (default 30 days).
-- **Email Alerts**: Integration with Gmail/SMTP for reliable distribution of alerts.
-- **Hangfire Dashboard**: Real-time monitoring of background tasks and scheduled jobs.
+- **Windows Authentication**: Seamless, zero-password login using organizational Windows accounts.
+- **Strict Access Control**: Only users with an **Active** status and a valid **IDG Number** in the system can access the application.
+- **User Management Portal**: Dedicated administrative interface to manage system users, toggle access, and assign admin roles.
+- **Certificate Management**: Comprehensive tracking of SSL domains, including issuance and expiry dates.
+- **Automated Notifications**: Background engine checks daily for expiring certificates and alerts assigned users.
+- **Hangfire Dashboard**: Secure monitoring of background tasks (Admin only).
 
 ---
 
-## 🛠 Tech Stack
+## 🔐 Authentication & Access Control
 
-- **Framework**: .NET 8.0 (ASP.NET Core MVC)
-- **Database**: Microsoft SQL Server / Azure SQL Database
-- **Background Processing**: Hangfire
-- **Email Service**: MailKit / MimeKit
-- **Authentication**: Windows Authentication (Intranet / Active Directory)
+The system uses a hybrid authentication model:
 
----
+1.  **Identity**: Windows Authentication identifies the user (DOMAIN\Username).
+2.  **Authorization**: The system extracts the **IDG Number** (alphanumeric ID) and looks it up in the internal database.
+3.  **Status Check**: Even if a user is found, they must be marked as **Active** to enter. Inactive users are redirected to an "Access Denied" page.
 
-## 💻 Local Configuration
+### Admin Privileges
 
-### 1. Prerequisites
+Users marked as **Admin** in the database have access to:
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) (Express or LocalDB)
-- SMTP Account (e.g., Gmail with App Password)
-
-### 2. Setup
-
-1. Clone the repository.
-2. Update `appsettings.json` with your sensitive data:
-   ```json
-   "ConnectionStrings": {
-     "DefaultConnection": "Server=...;Database=SslCertificateTracker;Trusted_Connection=True;"
-   },
-   "EmailSettings": {
-     "SmtpServer": "smtp.googlemail.com",
-     "SmtpPort": 465,
-     "SenderEmail": "your-email@gmail.com",
-     "SmtpUsername": "your-email@gmail.com",
-     "SmtpPassword": "your-app-password"
-   }
-   ```
-3. Apply Migrations:
-
-   ```bash
-   dotnet ef database update
-   ```
-
-   **Important**: This application uses **Windows Authentication**. Before running the app, you must manually register your Windows User in the database.
-   1. Find your exact Windows username by running this command in your terminal:
-      ```bash
-      whoami
-      ```
-      _Example output: `DESKTOP-ABC\User`_
-   2. Execute the following SQL command in your database (e.g., via SSMS or SQL cmd):
-      ```sql
-      INSERT INTO Users (Id, UserName, FullName, Email, CreatedAt)
-      VALUES (
-          NEWID(),
-          'YOUR_OUTPUT_FROM_WHOAMI', -- e.g., 'DESKTOP-ABC\User'
-          'Your Full Name',
-          'your-email@example.com',
-          GETUTCDATE()
-      );
-      ```
-      > **Note**: The `UserName` must match the output of `whoami` exactly (including the domain/machine name prefix). If you cannot access the app, check the `Access Denied` page which will display the username the server sees.
-
-4. Run the application:
-   ```bash
-   dotnet run
-   ```
+- **User Management**: Add, edit, or disable any user in the system.
+- **Hangfire Dashboard**: View and manually trigger certificate check jobs.
 
 ---
 
-## ☁️ Azure Deployment Guide
+## 💻 Setup & Management
 
-This guide assumes you are deploying to **Azure App Service** and **Azure SQL Database**.
+### 1. Initial Admin Provisioning
 
-### 1. Database Setup
+To get started, the first user must be manually added to the database.
 
-1. Create an **Azure SQL Database** in the Azure Portal.
-2. In the "Networking" settings of the SQL Server, ensure "Allow Azure services and resources to access this server" is enabled.
-3. Copy the Connection String.
+1.  Identify your Windows Username and IDG Number (usually your alphanumeric login).
+2.  Use the provided `insert_user.sql` script or run the following:
+    ```sql
+    INSERT INTO Users (Id, IdgNumber, Name, UserName, Email, IsActive, IsAdmin, CreatedAt)
+    VALUES (NEWID(), 'YOUR_IDG', 'Your Name', 'DOMAIN\User', 'email@org.com', 1, 1, GETUTCDATE());
+    ```
 
-### 2. App Service Setup
+### 2. User Management Portal
 
-1. Create a new **Web App** (Runtime stack: .NET 8).
-2. Go to **Settings > Configuration** (or Environment Variables).
-3. Add the following keys (Azure uses `__` instead of `:` for nested keys in Environment Variables):
-   - `ConnectionStrings__DefaultConnection`: _Your Azure SQL Connection String_
-   - `EmailSettings__SmtpServer`: `smtp.googlemail.com`
-   - `EmailSettings__SmtpPort`: `465`
-   - `EmailSettings__SenderEmail`: _Your Sender Address_
-   - `EmailSettings__SmtpUsername`: _Your SMTP Username_
-   - `EmailSettings__SmtpPassword`: _Your App Password_
+Once the first admin is in, they can navigate to **"Manage Users"** in the top navigation bar to:
 
-### 3. Identity & Migrations in Azure
+- **Invite New Users**: Register them by their IDG Number.
+- **Suspend Access**: Toggle a user to "Inactive" to block their access immediately without deleting their data.
+- **Promote Admins**: Grant administrative rights to other team members.
 
-If you are using GitHub Actions for deployment, you can run migrations during the build process. Alternatively, you can use the "Apply Migrations" feature if your CI/CD supports it, or temporarily enable "apply migrations on startup" (not recommended for production).
+### 3. Background Jobs (Hangfire)
 
-### 4. Background Jobs (Hangfire)
+The system checks for expiring certificates once a day.
 
-Hangfire requires the database to be reachable. Once the App Service starts, it will automatically initialize the Hangfire tables in your Azure SQL Database.
-
-> **Note**: For Azure App Service, ensure **"Always On"** is enabled (available in Basic tier and above) to keep the background worker running continuously.
+- **Monitoring**: Admins can visit `/hangfire` to see job history.
+- **Infrastructure**: For production (IIS), ensure the Application Pool "Start Mode" is set to `AlwaysRunning` to prevent the background timer from pausing.
 
 ---
 
-## 📊 Usage Guide
+## 🏠 Local Configuration
 
-1. **Dashboard**: Upon login, view your list of tracked domains and their expiry status.
-2. **Add Certificate**: Enter the domain name, issue date, and expiration date.
-3. **Profile Settings**: Configure your notification email and set how many days before expiry you wish to be notified.
-4. **Hangfire Dashboard**: Visit `/hangfire` (Admin access only) to view past and upcoming automated checks.
+### Update `appsettings.json`:
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=...;Database=SslCertificateTracker;Trusted_Connection=True;"
+},
+"EmailSettings": {
+  "SmtpServer": "smtp.googlemail.com",
+  "SmtpPort": 465,
+  "SenderEmail": "tjamrasa8@gmail.com",
+  "SmtpUsername": "tjamrasa8@gmail.com",
+  "SmtpPassword": "your-app-password"
+}
+```
 
 ---
 
-## 👤 Developer Notes
+## 📋 Developer Notes
 
-- **SMTP Issues**: If you encounter `SocketException (11001)`, ensure the `SmtpServer` hostname is correct and reachable. The app is currently configured to use `smtp.googlemail.com`.
-- **Contribution**: PRs are welcome! Please ensure you update the `appsettings.Example.json` if you introduce new configuration keys.
+- **Resilient Lookup**: The login filter checks for users using multiple variations (IDG Number, Full Windows Name, etc.) to ensure reliable access.
+- **Notifications**: Email alerts are sent based on the "Days Before Expiry" setting in each user's profile (default 30 days).
+- **SMTP**: Currently configured for Gmail. For corporate deployment, update the `SmtpServer` to your organization's internal relay.
